@@ -1,27 +1,33 @@
 import React, { useRef, useMemo } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useFrame, useLoader, useThree } from '@react-three/fiber';
 import { Text, Html, Line } from '@react-three/drei';
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { FaJs, FaReact, FaNodeJs, FaPython, FaHtml5, FaCss3 } from 'react-icons/fa';
 import { SiTypescript, SiVuedotjs, SiAngular, SiGraphql } from 'react-icons/si';
 
-const Sun = () => {
+const RetroComputer = () => {
+  const computerRef = useRef();
+  const gltf = useLoader(GLTFLoader, '/src/assets/triangular_animated_portal.glb');
+
+  useFrame(() => {
+    computerRef.current.rotation.y += 0.01;
+  });
+
   return (
-    <group>
-      <mesh>
-        <sphereGeometry args={[1.5, 64, 64]} />
-        <meshBasicMaterial color="#FDB813" />
-      </mesh>
-      <pointLight intensity={1} distance={50} color="#FDB813" />
-      <Text
-        position={[0, 2, 0]}
-        fontSize={0.6}
+    <group ref={computerRef}>
+      <primitive object={gltf.scene} scale={[2, 2, 2]} /> {/* Increased scale from 1.5 to 2 */}
+      <pointLight intensity={1.5} distance={60} color="#ffffff" /> {/* Increased intensity and changed color to white */}
+      <ambientLight intensity={0.4} /> {/* Added ambient light to make the model lighter overall */}
+      {/* <Text
+        position={[0, 2.5, 0]} 
+        fontSize={0.7} 
         color="white"
         anchorX="center"
         anchorY="middle"
       >
-        Me
-      </Text>
+        Retro Computer
+      </Text> */}
     </group>
   );
 };
@@ -36,7 +42,7 @@ const TechIcon = ({ orbitRadius, orbitSpeed, name, size, Icon }) => {
     const angle = state.clock.elapsedTime * orbitSpeed;
     groupRef.current.position.x = Math.cos(angle) * orbitRadius;
     groupRef.current.position.z = Math.sin(angle) * orbitRadius;
-    
+
     textRef.current.lookAt(camera.position);
     iconRef.current.lookAt(camera.position);
   });
@@ -73,6 +79,7 @@ const TechIcon = ({ orbitRadius, orbitSpeed, name, size, Icon }) => {
     </group>
   );
 };
+
 const Orbit = ({ radius }) => {
   const points = useMemo(() => {
     const points = [];
@@ -98,16 +105,16 @@ const ProgrammingGalaxy = () => {
   const galaxyRef = useRef();
 
   const technologies = useMemo(() => [
-    { name: 'JavaScript', size: 0.8, orbitRadius: 6, orbitSpeed: 0.3, Icon: FaJs },
-    { name: 'React', size: 0.7, orbitRadius: 9, orbitSpeed: 0.25, Icon: FaReact },
-    { name: 'Node.js', size: 0.6, orbitRadius: 12, orbitSpeed: 0.2, Icon: FaNodeJs },
-    { name: 'Python', size: 0.9, orbitRadius: 15, orbitSpeed: 0.15, Icon: FaPython },
-    { name: 'TypeScript', size: 0.5, orbitRadius: 18, orbitSpeed: 0.12, Icon: SiTypescript },
-    { name: 'HTML5', size: 0.6, orbitRadius: 21, orbitSpeed: 0.1, Icon: FaHtml5 },
-    { name: 'CSS3', size: 0.6, orbitRadius: 24, orbitSpeed: 0.08, Icon: FaCss3 },
-    { name: 'Vue.js', size: 0.5, orbitRadius: 27, orbitSpeed: 0.06, Icon: SiVuedotjs },
-    { name: 'Angular', size: 0.6, orbitRadius: 30, orbitSpeed: 0.05, Icon: SiAngular },
-    { name: 'GraphQL', size: 0.4, orbitRadius: 33, orbitSpeed: 0.04, Icon: SiGraphql },
+    { name: 'JavaScript', size: 0.8, orbitRadius: 8, orbitSpeed: 0.3, Icon: FaJs },
+    { name: 'React', size: 0.7, orbitRadius: 11, orbitSpeed: 0.25, Icon: FaReact },
+    { name: 'Node.js', size: 0.6, orbitRadius: 14, orbitSpeed: 0.2, Icon: FaNodeJs },
+    { name: 'Python', size: 0.9, orbitRadius: 17, orbitSpeed: 0.15, Icon: FaPython },
+    { name: 'TypeScript', size: 0.5, orbitRadius: 20, orbitSpeed: 0.12, Icon: SiTypescript },
+    { name: 'HTML5', size: 0.6, orbitRadius: 23, orbitSpeed: 0.1, Icon: FaHtml5 },
+    { name: 'CSS3', size: 0.6, orbitRadius: 26, orbitSpeed: 0.08, Icon: FaCss3 },
+    { name: 'Vue.js', size: 0.5, orbitRadius: 29, orbitSpeed: 0.06, Icon: SiVuedotjs },
+    { name: 'Angular', size: 0.6, orbitRadius: 32, orbitSpeed: 0.05, Icon: SiAngular },
+    { name: 'GraphQL', size: 0.4, orbitRadius: 35, orbitSpeed: 0.04, Icon: SiGraphql },
   ], []);
 
   useFrame(() => {
@@ -116,8 +123,8 @@ const ProgrammingGalaxy = () => {
 
   return (
     <group ref={galaxyRef}>
-      <ambientLight intensity={0.2} />
-      <Sun />
+      <ambientLight intensity={0.3} /> {/* Increased overall ambient light */}
+      <RetroComputer />
       {technologies.map((tech) => (
         <React.Fragment key={tech.name}>
           <Orbit radius={tech.orbitRadius} />
