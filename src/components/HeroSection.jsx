@@ -1,8 +1,10 @@
-import React, { Suspense, useRef, useEffect } from 'react';
+// HeroSection.js
+import React, { Suspense, useRef } from 'react';
 import styled from 'styled-components';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Stars } from '@react-three/drei';
+import { Stars } from '@react-three/drei';
 import ProgrammingGalaxy from './ProgrammingGalaxy';
+import SpaceVehicle from './SpaceVehicle';
 import * as THREE from 'three';
 
 const HeroSectionWrapper = styled.section`
@@ -62,8 +64,8 @@ const CameraController = () => {
   const initialCameraPosition = useRef(new THREE.Vector3(0, 0, 35));
 
   useFrame(() => {
-    camera.position.x = THREE.MathUtils.lerp(camera.position.x, initialCameraPosition.current.x + mouse.x * 10, 0.05);
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, initialCameraPosition.current.y + mouse.y * 10, 0.05);
+    camera.position.x = THREE.MathUtils.lerp(camera.position.x, initialCameraPosition.current.x + mouse.x * 5, 0.05);
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, initialCameraPosition.current.y + mouse.y * 5, 0.05);
     camera.lookAt(0, 0, 0);
   });
 
@@ -75,6 +77,10 @@ const EnhancedProgrammingGalaxy = ({ color }) => {
     <>
       <ProgrammingGalaxy color={color} />
       <Stars radius={300} depth={60} count={20000} factor={7} saturation={0} fade />
+      <SpaceVehicle />
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[5, 5, 5]} intensity={1} />
+      <pointLight position={[-5, 5, 5]} intensity={0.5} />
     </>
   );
 };
@@ -91,8 +97,6 @@ const HeroSection = ({ theme }) => {
         <Suspense fallback={<div>Loading...</div>}>
           <Canvas camera={{ position: [0, 0, 35], fov: 60 }}>
             <CameraController />
-            <ambientLight intensity={0.1} />
-            <pointLight position={[0, 0, 0]} intensity={1} />
             <EnhancedProgrammingGalaxy color={theme.colors.primary} />
           </Canvas>
         </Suspense>
