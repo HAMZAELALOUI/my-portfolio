@@ -4,10 +4,9 @@ import { useFrame } from '@react-three/fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import * as THREE from 'three';
 
-const SpaceVehicle = ({ scale = 3 }) => {
+const SpaceVehicle = ({ scale = 3, position = [-20, 8, -10] }) => {
   const mesh = useRef();
   const [model, setModel] = useState(null);
-  const centerPosition = new THREE.Vector3(-20, 8, -10); // Left side of the scene
   const verticalAmplitude = 2; // Adjust this for larger/smaller up and down movement
 
   useEffect(() => {
@@ -33,7 +32,7 @@ const SpaceVehicle = ({ scale = 3 }) => {
       const time = state.clock.getElapsedTime();
 
       // Calculate new position (only vertical movement)
-      const newPosition = centerPosition.clone();
+      const newPosition = new THREE.Vector3(...position);
       newPosition.y += Math.sin(time * 0.5) * verticalAmplitude;
 
       mesh.current.position.copy(newPosition);
