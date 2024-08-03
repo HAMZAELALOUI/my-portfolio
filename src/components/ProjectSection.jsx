@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import { useInView } from 'react-intersection-observer';
-import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
+import { FaChevronRight, FaChevronLeft, FaTimes } from 'react-icons/fa';
 
 const ProjectSectionWrapper = styled.section`
   min-height: 100vh;
@@ -155,6 +155,7 @@ const ProjectImage = styled.img`
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+  cursor: pointer;
 `;
 
 const ImageNavButton = styled.button`
@@ -167,6 +168,40 @@ const ImageNavButton = styled.button`
   &:hover {
     color: #569CD6;
   }
+  ${props => props.disabled && css`
+    opacity: 0.5;
+    cursor: not-allowed;
+  `}
+`;
+
+const ImageModal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const ModalImage = styled.img`
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
 `;
 
 const projects = [
@@ -178,7 +213,7 @@ const projects = [
     images: [
       'https://i.pinimg.com/564x/67/fa/bc/67fabcad5b7fb3a976bf89ecb1212d90.jpg',
       'https://i.pinimg.com/564x/01/2b/0b/012b0bc2e871fc073c8dbf8008bdf20e.jpg',
-      'https://i.pinimg.com/564x/67/fa/bc/67fabcad5b7fb3a976bf89ecb1212d90.jpg',
+      'https://i.pinimg.com/564x/02/12/b2/0212b28e83180aac5b6349f40dbd9d95.jpg',
     ]
   },
   {
@@ -198,6 +233,7 @@ function ProjectSection() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [terminalOutput, setTerminalOutput] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const terminalRef = useRef(null);
   const [ref, inView] = useInView({
     triggerOnce: true,
@@ -264,9 +300,23 @@ function ProjectSection() {
           <ProjectDescription>{project.description}</ProjectDescription>
           <ProjectDescription><strong>Technologies:</strong> {project.technologies}</ProjectDescription>
           <ImageGallery>
-            <ImageNavButton onClick={handlePrevImage}><FaChevronLeft /></ImageNavButton>
-            <ProjectImage src={project.images[currentImageIndex]} alt={`${project.name} screenshot`} />
-            <ImageNavButton onClick={handleNextImage}><FaChevronRight /></ImageNavButton>
+            <ImageNavButton 
+              onClick={handlePrevImage} 
+              disabled={project.images.length <= 1 || currentImageIndex === 0}
+            >
+              <FaChevronLeft />
+            </ImageNavButton>
+            <ProjectImage 
+              src={project.images[currentImageIndex]} 
+              alt={`${project.name} screenshot`} 
+              onClick={toggleModal}
+            />
+            <ImageNavButton 
+              onClick={handleNextImage} 
+              disabled={project.images.length <= 1 || currentImageIndex === project.images.length - 1}
+            >
+              <FaChevronRight />
+            </ImageNavButton>
           </ImageGallery>
         </ProjectDetails>
       ));
@@ -276,15 +326,19 @@ function ProjectSection() {
   };
 
   const handleNextImage = () => {
-    setCurrentImageIndex((prevIndex) => 
-      (prevIndex + 1) % selectedProject.images.length
-    );
+    if (selectedProject && currentImageIndex < selectedProject.images.length - 1) {
+      setCurrentImageIndex(prevIndex => prevIndex + 1);
+    }
   };
 
   const handlePrevImage = () => {
-    setCurrentImageIndex((prevIndex) => 
-      (prevIndex - 1 + selectedProject.images.length) % selectedProject.images.length
-    );
+    if (selectedProject && currentImageIndex > 0) {
+      setCurrentImageIndex(prevIndex => prevIndex - 1);
+    }
+  };
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
   };
 
   return (
@@ -310,6 +364,27 @@ function ProjectSection() {
           ))}
         </TerminalContent>
       </TerminalWindow>
+      {isModalOpen && selectedProject && (
+        <ImageModal>
+          <CloseButton onClick={toggleModal}><FaTimes /></CloseButton>
+          <ImageNavButton 
+            onClick={handlePrevImage} 
+            disabled={currentImageIndex === 0}
+          >
+            <FaChevronLeft />
+          </ImageNavButton>
+          <ModalImage 
+            src={selectedProject.images[currentImageIndex]} 
+            alt={`${selectedProject.name} screenshot`} 
+          />
+          <ImageNavButton 
+            onClick={handleNextImage} 
+            disabled={currentImageIndex === selectedProject.images.length - 1}
+          >
+            <FaChevronRight />
+          </ImageNavButton>
+        </ImageModal>
+      )}
     </ProjectSectionWrapper>
   );
 }
