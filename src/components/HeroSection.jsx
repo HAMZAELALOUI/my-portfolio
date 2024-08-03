@@ -24,7 +24,11 @@ const HeroSection = ({ theme }) => {
         </Suspense>
       </HeroCanvas>
       <MouseIconContainer>
-        <ViewWorkButton onClick={handleViewWork} disabled={isLoading} isLoading={isLoading} />
+      <ViewWorkButton 
+          onClick={handleViewWork} 
+          disabled={isLoading} 
+          isLoading={isLoading}
+        />
       </MouseIconContainer>
     </HeroSectionWrapper>
   );

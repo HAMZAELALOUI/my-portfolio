@@ -1,5 +1,5 @@
 // StyledComponents.js
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 export const HeroSectionWrapper = styled.section`
   min-height: 100vh;
@@ -30,26 +30,53 @@ export const MouseIconContainer = styled.div`
   align-items: center;
 `;
 
+
+
+const blink = keyframes`
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+`;
+
 export const ViewWorkButtonStyled = styled.button`
-  background-color: ${props => props.theme.colors.primary};
-  color: ${props => props.theme.colors.darkBackground};
-  font-family: 'Fira Code', monospace;
-  font-size: 1.1rem;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 5px;
+  background-color: transparent;
+  color: #87CEFA; // Light sky blue, matching IntroductionText
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 1rem;
+  padding: 10px 15px;
+  border: 1px solid #87CEFA;
+  border-radius: 3px;
   cursor: pointer;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  text-shadow: 0 0 5px rgba(135, 206, 250, 0.5);
+  box-shadow: 0 0 10px rgba(135, 206, 250, 0.3);
 
   &:hover {
-    background-color: ${props => props.theme.colors.lightText};
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: rgba(135, 206, 250, 0.1);
+    box-shadow: 0 0 15px rgba(135, 206, 250, 0.5);
   }
 
   &:disabled {
-    opacity: 0.7;
+    opacity: 0.5;
     cursor: not-allowed;
+  }
+`;
+
+export const CommandPrompt = styled.span`
+  color: #90EE90; // Light green, matching the IntroductionText prompt
+  margin-right: 8px;
+`;
+
+export const ButtonText = styled.span`
+  position: relative;
+
+  &::after {
+    content: '|';
+    position: absolute;
+    right: -10px;
+    animation: ${blink} 1s step-end infinite;
+    color: #87CEFA; // Light sky blue for the cursor
   }
 `;
 
