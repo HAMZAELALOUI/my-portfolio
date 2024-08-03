@@ -1,13 +1,10 @@
-// HeroSection.js
-import React, { Suspense, useState } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { HeroSectionWrapper, HeroCanvas, MouseIconContainer, LoadingIndicator } from './StyledComponents';
-import CameraController from './CameraController';
-import EnhancedProgrammingGalaxy from './EnhancedProgrammingGalaxy';
+// src/components/HeroSection.js
+import React, { useState } from 'react';
+import { HeroSectionWrapper, MouseIconContainer } from './StyledComponents';
 import ViewWorkButton from './ViewWorkButton';
 
-const HeroSection = ({ theme }) => {
-  const [isLoading, setIsLoading] = useState(true);
+const HeroSection = () => {
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleViewWork = () => {
     console.log("View My Work clicked");
@@ -15,18 +12,10 @@ const HeroSection = ({ theme }) => {
 
   return (
     <HeroSectionWrapper>
-      <HeroCanvas>
-        <Suspense fallback={<LoadingIndicator>Loading...</LoadingIndicator>}>
-          <Canvas camera={{ position: [0, 0, 35], fov: 60 }} onCreated={() => setIsLoading(false)}>
-            <CameraController />
-            <EnhancedProgrammingGalaxy color={theme.colors.primary} theme={theme} />
-          </Canvas>
-        </Suspense>
-      </HeroCanvas>
       <MouseIconContainer>
-      <ViewWorkButton 
-          onClick={handleViewWork} 
-          disabled={isLoading} 
+        <ViewWorkButton
+          onClick={handleViewWork}
+          disabled={isLoading}
           isLoading={isLoading}
         />
       </MouseIconContainer>

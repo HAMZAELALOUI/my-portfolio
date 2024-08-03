@@ -1,3 +1,4 @@
+// src/styles/GlobalStyles.js
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
@@ -7,10 +8,28 @@ const GlobalStyles = createGlobalStyle`
     padding: 0;
   }
 
+  html, body {
+    height: 100%;
+  }
+
   body {
-    font-family: ${props => props.theme.fonts.main};
-    background-color: ${props => props.theme.colors.background};
-    color: ${props => props.theme.colors.text};
+    font-family: 'Arial', sans-serif;
+    background: transparent; // Ensure the body background is transparent
+    color: ${({ theme }) => theme.colors.text};
+    line-height: 1.5;
+  }
+
+  #root {
+    height: 100%;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    cursor: pointer;
   }
 `;
 

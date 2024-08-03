@@ -6,19 +6,20 @@ import theme from './utils/theme';
 import Navigation from './components/Navigation';
 import Home from './pages/Home';
 import Footer from './components/Footer';
-import AnimatedBackground from './components/BackgroundAnimation'; // Import the new component
+import GlobalBackground from './components/GlobalBackground';
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyles />
       <Router>
-        <AnimatedBackground theme={theme} /> {/* Add the AnimatedBackground here */}
+        <GlobalBackground theme={theme} />
         <Navigation />
         <Routes>
           <Route path="/" element={<Home />} />
+          {/* Add other routes here */}
         </Routes>
-        <Footer/>
+        <Footer />
       </Router>
     </ThemeProvider>
   );
