@@ -3,7 +3,7 @@ import styled, { keyframes } from 'styled-components';
 
 export const HeroSectionWrapper = styled.section`
   min-height: 100vh;
-  width: 100%;
+  width: 210vh;
   position: relative;
   overflow: hidden;
   background-color: ${props => props.theme.colors.darkBackground};
