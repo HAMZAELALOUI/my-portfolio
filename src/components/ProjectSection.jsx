@@ -174,6 +174,34 @@ const ImageNavButton = styled.button`
   `}
 `;
 
+const ImageThumbnails = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  flex-wrap: wrap;
+`;
+
+const Thumbnail = styled.img`
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  margin: 0 5px 5px 0;
+  cursor: pointer;
+  border: 2px solid ${props => props.active ? '#4EC9B0' : 'transparent'};
+`;
+
+const ShowMoreButton = styled.button`
+  background: none;
+  border: 1px solid #4EC9B0;
+  color: #4EC9B0;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-top: 10px;
+  &:hover {
+    background-color: rgba(78, 201, 176, 0.1);
+  }
+`;
+
 const ImageModal = styled.div`
   position: fixed;
   top: 0;
@@ -213,7 +241,7 @@ const projects = [
     images: [
       'https://i.pinimg.com/564x/67/fa/bc/67fabcad5b7fb3a976bf89ecb1212d90.jpg',
       'https://i.pinimg.com/564x/01/2b/0b/012b0bc2e871fc073c8dbf8008bdf20e.jpg',
-      'https://i.pinimg.com/564x/02/12/b2/0212b28e83180aac5b6349f40dbd9d95.jpg',
+      'https://i.pinimg.com/564x/67/fa/bc/67fabcad5b7fb3a976bf89ecb1212d90.jpg',
     ]
   },
   {
@@ -223,6 +251,13 @@ const projects = [
     technologies: 'React.js, Generative AI, Spring Boot',
     images: [
       'https://i.pinimg.com/564x/67/fa/bc/67fabcad5b7fb3a976bf89ecb1212d90.jpg',
+      'https://i.pinimg.com/564x/01/2b/0b/012b0bc2e871fc073c8dbf8008bdf20e.jpg',
+      'https://i.pinimg.com/564x/01/2b/0b/012b0bc2e871fc073c8dbf8008bdf20e.jpg',
+      'https://i.pinimg.com/564x/01/2b/0b/012b0bc2e871fc073c8dbf8008bdf20e.jpg',
+      'https://i.pinimg.com/564x/01/2b/0b/012b0bc2e871fc073c8dbf8008bdf20e.jpg',
+      'https://i.pinimg.com/564x/01/2b/0b/012b0bc2e871fc073c8dbf8008bdf20e.jpg',
+      'https://i.pinimg.com/564x/01/2b/0b/012b0bc2e871fc073c8dbf8008bdf20e.jpg',
+      'https://i.pinimg.com/564x/01/2b/0b/012b0bc2e871fc073c8dbf8008bdf20e.jpg',
       'https://i.pinimg.com/564x/01/2b/0b/012b0bc2e871fc073c8dbf8008bdf20e.jpg',
     ]
   },
@@ -234,6 +269,7 @@ function ProjectSection() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [terminalOutput, setTerminalOutput] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showAllThumbnails, setShowAllThumbnails] = useState(false);
   const terminalRef = useRef(null);
   const [ref, inView] = useInView({
     triggerOnce: true,
@@ -286,8 +322,9 @@ function ProjectSection() {
   }, [inView]);
 
   const handleProjectClick = (project) => {
-    setSelectedProject(null);
+    setSelectedProject(project);
     setCurrentImageIndex(0);
+    setShowAllThumbnails(false);
     
     // Clear previous project details
     setTerminalOutput(prev => prev.filter(line => line.command !== 'cat project_details.txt'));
@@ -301,8 +338,8 @@ function ProjectSection() {
           <ProjectDescription><strong>Technologies:</strong> {project.technologies}</ProjectDescription>
           <ImageGallery>
             <ImageNavButton 
-              onClick={handlePrevImage} 
-              disabled={project.images.length <= 1 || currentImageIndex === 0}
+              onClick={() => handleImageChange(-1)} 
+              disabled={currentImageIndex === 0}
             >
               <FaChevronLeft />
             </ImageNavButton>
@@ -312,29 +349,40 @@ function ProjectSection() {
               onClick={toggleModal}
             />
             <ImageNavButton 
-              onClick={handleNextImage} 
-              disabled={project.images.length <= 1 || currentImageIndex === project.images.length - 1}
+              onClick={() => handleImageChange(1)} 
+              disabled={currentImageIndex === project.images.length - 1}
             >
               <FaChevronRight />
             </ImageNavButton>
           </ImageGallery>
+          <ImageThumbnails>
+            {(showAllThumbnails ? project.images : project.images.slice(0, 3)).map((image, index) => (
+              <Thumbnail
+                key={index}
+                src={image}
+                alt={`${project.name} thumbnail ${index + 1}`}
+                active={index === currentImageIndex}
+                onClick={() => setCurrentImageIndex(index)}
+              />
+            ))}
+          </ImageThumbnails>
+         
         </ProjectDetails>
       ));
       scrollToBottom();
-      setSelectedProject(project);
     }, 500);
   };
 
-  const handleNextImage = () => {
-    if (selectedProject && currentImageIndex < selectedProject.images.length - 1) {
-      setCurrentImageIndex(prevIndex => prevIndex + 1);
-    }
-  };
-
-  const handlePrevImage = () => {
-    if (selectedProject && currentImageIndex > 0) {
-      setCurrentImageIndex(prevIndex => prevIndex - 1);
-    }
+  const handleImageChange = (direction) => {
+    if (!selectedProject) return;
+    
+    setCurrentImageIndex((prevIndex) => {
+      const newIndex = prevIndex + direction;
+      if (newIndex >= 0 && newIndex < selectedProject.images.length) {
+        return newIndex;
+      }
+      return prevIndex;
+    });
   };
 
   const toggleModal = () => {
@@ -368,7 +416,7 @@ function ProjectSection() {
         <ImageModal>
           <CloseButton onClick={toggleModal}><FaTimes /></CloseButton>
           <ImageNavButton 
-            onClick={handlePrevImage} 
+            onClick={() => handleImageChange(-1)} 
             disabled={currentImageIndex === 0}
           >
             <FaChevronLeft />
@@ -378,7 +426,7 @@ function ProjectSection() {
             alt={`${selectedProject.name} screenshot`} 
           />
           <ImageNavButton 
-            onClick={handleNextImage} 
+            onClick={() => handleImageChange(1)} 
             disabled={currentImageIndex === selectedProject.images.length - 1}
           >
             <FaChevronRight />

@@ -5,6 +5,7 @@ import HeroSection from '../components/HeroSection';
 import AboutMeSection from '../components/AboutMeSection';
 import GlobalBackground from '../components/GlobalBackground';
 import ProjectSection from '../components/ProjectSection'
+import ContactMeSection from '../components/ContactMeSection';
 
 const HomeContainer = styled.div`
   position: relative;
@@ -19,6 +20,7 @@ const Home = () => {
       <HeroSection theme={theme} />
       <AboutMeSection />
       <ProjectSection/>
+      <ContactMeSection />
     </HomeContainer>
   );
 };
