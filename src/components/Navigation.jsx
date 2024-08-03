@@ -1,110 +1,84 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
+import { FaGithub, FaLinkedin } from 'react-icons/fa';
 
-const twinkle = keyframes`
+const cursorBlink = keyframes`
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  50% { opacity: 0; }
+`;
+
+const glow = keyframes`
+  0%, 100% { box-shadow: 0 0 5px rgba(77, 255, 243, 0.2), 0 0 20px rgba(77, 255, 243, 0.1); }
+  50% { box-shadow: 0 0 10px rgba(77, 255, 243, 0.3), 0 0 30px rgba(77, 255, 243, 0.2); }
 `;
 
 const NavContainer = styled.header`
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(10, 25, 47, 0.95);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  top: 30px;
+  left: 30px;
   z-index: 1000;
-  transition: all 0.3s ease;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-      radial-gradient(white 1px, transparent 1px),
-      radial-gradient(white 1px, transparent 1px);
-    background-size: 50px 50px;
-    background-position: 0 0, 25px 25px;
-    opacity: 0.1;
-    z-index: -1;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-      radial-gradient(white 1px, transparent 1px),
-      radial-gradient(white 1px, transparent 1px);
-    background-size: 30px 30px;
-    background-position: 0 0, 15px 15px;
-    opacity: 0.05;
-    z-index: -1;
-    animation: ${twinkle} 4s infinite alternate;
-  }
-`;
-
-const Nav = styled.nav`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 5%;
-  max-width: 1400px;
-  margin: 0 auto;
-`;
-
-const Logo = styled(Link)`
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #64ffda;
-  text-decoration: none;
   font-family: 'Fira Code', monospace;
-  transition: color 0.3s ease;
+`;
+
+const NavTerminal = styled.div`
+  background-color: rgba(13, 12, 34, 0.15);
+  border: 1px solid rgba(77, 255, 243, 0.3);
+  border-radius: 8px;
+  padding: 20px;
+  backdrop-filter: blur(5px);
+  max-width: 350px;
+  animation: ${glow} 4s infinite alternate;
+  transition: all 0.3s ease;
 
   &:hover {
-    color: #ffffff;
+    background-color: rgba(13, 12, 34, 0.25);
+    box-shadow: 0 0 15px rgba(77, 255, 243, 0.3), 0 0 40px rgba(77, 255, 243, 0.2);
   }
 `;
 
-const NavLinks = styled.div`
-  display: flex;
-  gap: 2rem;
+const NamePrompt = styled.div`
+  color: #90EE90;
+  margin-bottom: 15px;
+  font-weight: bold;
+  text-shadow: 0 0 5px rgba(144, 238, 144, 0.5);
+`;
 
-  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
-    display: none;
-  }
+const NavPrompt = styled.div`
+  color: #FF61D8;
+  margin-bottom: 10px;
+  text-shadow: 0 0 5px rgba(255, 97, 216, 0.5);
 `;
 
 const NavLink = styled(Link)`
-  color: #ffffff;
-  font-weight: 500;
+  display: block;
+  color: #8EBBFF;
   text-decoration: none;
+  padding: 5px 0;
+  transition: all 0.3s ease;
   position: relative;
-  padding: 0.5rem 0;
-  transition: color 0.3s ease;
-  font-family: 'Fira Code', monospace;
+  text-shadow: 0 0 5px rgba(142, 187, 255, 0.5);
+
+  &:hover, &.active {
+    color: #4DFFF3;
+    text-shadow: 0 0 8px rgba(77, 255, 243, 0.7);
+  }
+
+  &::before {
+    content: '$ ';
+    color: #90EE90;
+  }
 
   &::after {
     content: '';
     position: absolute;
-    bottom: -2px;
+    bottom: 0;
     left: 0;
     width: 0;
-    height: 2px;
-    background-color: #64ffda;
+    height: 1px;
+    background-color: #4DFFF3;
     transition: width 0.3s ease;
-  }
-
-  &:hover, &.active {
-    color: #64ffda;
+    box-shadow: 0 0 5px rgba(77, 255, 243, 0.5);
   }
 
   &:hover::after, &.active::after {
@@ -112,89 +86,74 @@ const NavLink = styled(Link)`
   }
 `;
 
-const MenuButton = styled.button`
-  display: none;
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #ffffff;
-  transition: color 0.3s ease;
-  font-family: 'Fira Code', monospace;
+const Cursor = styled.span`
+  display: inline-block;
+  width: 8px;
+  height: 15px;
+  background-color: #4DFFF3;
+  margin-left: 5px;
+  animation: ${cursorBlink} 0.8s infinite;
+  box-shadow: 0 0 5px rgba(77, 255, 243, 0.5);
+`;
+
+const SocialLinks = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(77, 255, 243, 0.3);
+`;
+
+const SocialLink = styled.a`
+  color: #8EBBFF;
+  font-size: 1.2rem;
+  margin-right: 15px;
+  transition: all 0.3s ease;
+  text-shadow: 0 0 5px rgba(142, 187, 255, 0.5);
 
   &:hover {
-    color: #64ffda;
-  }
-
-  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
-    display: block;
+    color: #4DFFF3;
+    text-shadow: 0 0 8px rgba(77, 255, 243, 0.7);
+    transform: translateY(-2px);
   }
 `;
-
-const MobileMenu = styled(motion.div)`
-  display: none;
-  
-  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background-color: rgba(10, 25, 47, 0.98);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 1rem 5%;
-  }
-`;
-
-const MobileNavLink = styled(NavLink)`
-  padding: 1rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-
-  &:last-child {
-    border-bottom: none;
-  }
-`;
-
 
 
 const Navigation = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [activeLink, setActiveLink] = useState('/');
   const location = useLocation();
 
   useEffect(() => {
-    setIsOpen(false);
+    setActiveLink(location.pathname);
   }, [location]);
 
   return (
     <NavContainer>
-      <Nav>
-        <Logo to="/">{'<YourName />'}</Logo>
-        <NavLinks>
-          <NavLink to="/" className={location.pathname === '/' ? 'active' : ''}>Home</NavLink>
-          <NavLink to="/about" className={location.pathname === '/about' ? 'active' : ''}>About</NavLink>
-          <NavLink to="/projects" className={location.pathname === '/projects' ? 'active' : ''}>Projects</NavLink>
-          <NavLink to="/contact" className={location.pathname === '/contact' ? 'active' : ''}>Contact</NavLink>
-        </NavLinks>
-        <MenuButton onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? '✕' : '☰'}
-        </MenuButton>
-      </Nav>
-      <AnimatePresence>
-        {isOpen && (
-          <MobileMenu
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            <MobileNavLink to="/">Home</MobileNavLink>
-            <MobileNavLink to="/about">About</MobileNavLink>
-            <MobileNavLink to="/projects">Projects</MobileNavLink>
-            <MobileNavLink to="/contact">Contact</MobileNavLink>
-          </MobileMenu>
-        )}
-      </AnimatePresence>
+      <NavTerminal>
+        <NamePrompt>user@hamza-elaloui:~$</NamePrompt>
+        <NavPrompt>hamza-elaloui:~/navigation$</NavPrompt>
+        <NavLink to="/" className={activeLink === '/' ? 'active' : ''}>
+          cd home
+        </NavLink>
+        <NavLink to="/about" className={activeLink === '/about' ? 'active' : ''}>
+          cat about.md
+        </NavLink>
+        <NavLink to="/projects" className={activeLink === '/projects' ? 'active' : ''}>
+          ls projects/
+        </NavLink>
+        <NavLink to="/contact" className={activeLink === '/contact' ? 'active' : ''}>
+          ping contact
+        </NavLink>
+        <Cursor />
+        <SocialLinks>
+          <SocialLink href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer">
+            <FaGithub />
+          </SocialLink>
+          <SocialLink href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer">
+            <FaLinkedin />
+          </SocialLink>
+        </SocialLinks>
+      </NavTerminal>
     </NavContainer>
   );
 };

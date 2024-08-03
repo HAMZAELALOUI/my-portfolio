@@ -7,7 +7,7 @@ import ProjectsSection from '../components/ProjectsSection';
 import ContactSection from '../components/ContactSection';
 
 const HomeContainer = styled.div`
-  padding-top: 80px; // To account for the fixed header
+  /* padding-top: 80px; // To account for the fixed header */
 `;
 
 const Home = () => {
