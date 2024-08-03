@@ -21,6 +21,7 @@ const GlobalStyles = createGlobalStyle`
 
   #root {
     height: 100%;
+    overflow-x: hidden;
   }
 
   a {
