@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
-import { FaGithub, FaLinkedin } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaUpload } from 'react-icons/fa';
+import { SiGmail } from 'react-icons/si';
 
 const cursorBlink = keyframes`
   0%, 100% { opacity: 1; }
@@ -150,6 +151,12 @@ const Navigation = () => {
           </SocialLink>
           <SocialLink href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer">
             <FaLinkedin />
+          </SocialLink>
+          <SocialLink href="mailto:hamza.elaloui10@gmail.com" target="_blank" rel="noopener noreferrer">
+            <SiGmail />
+          </SocialLink>
+          <SocialLink href="/path/to/your/cv.pdf" target="_blank" rel="noopener noreferrer">
+            <FaUpload />
           </SocialLink>
         </SocialLinks>
       </NavTerminal>
