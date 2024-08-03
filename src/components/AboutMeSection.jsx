@@ -24,8 +24,8 @@ const AboutMeSectionWrapper = styled.section`
 `;
 
 const TerminalWindow = styled.div`
-  width: 60%;
-  max-width: 800px;
+  width: 70%;
+  max-width: 1600px;
   height: 80vh;
   background-color: rgba(13, 12, 34, 0.25);
   border-radius: 10px;
