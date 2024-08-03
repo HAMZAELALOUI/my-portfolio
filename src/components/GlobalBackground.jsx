@@ -3,7 +3,7 @@ import React, { useRef, useEffect } from 'react';
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import styled from 'styled-components';
 import * as THREE from 'three';
-import EnhancedProgrammingGalaxy from './EnhancedProgrammingGalaxy';
+import StarField from './StarField';
 
 const CanvasContainer = styled.div`
   position: fixed;
@@ -52,12 +52,12 @@ function CameraController() {
   return null;
 }
 
-const GlobalBackground = ({ theme }) => {
+const GlobalBackground = () => {
   return (
     <CanvasContainer>
       <Canvas camera={{ position: [0, 0, 35], fov: 60 }}>
         <CameraController />
-        <EnhancedProgrammingGalaxy color={theme.colors.primary} theme={theme} />
+        <StarField />
       </Canvas>
     </CanvasContainer>
   );

@@ -1,16 +1,22 @@
 // src/pages/Home.js
 import React from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import HeroSection from '../components/HeroSection';
+import AboutMeSection from '../components/AboutMeSection';
+import GlobalBackground from '../components/GlobalBackground';
 
 const HomeContainer = styled.div`
-  /* Add any necessary styles */
+  position: relative;
 `;
 
 const Home = () => {
+  const theme = useTheme();
+
   return (
     <HomeContainer>
-      <HeroSection />
+      <GlobalBackground />
+      <HeroSection theme={theme} />
+      <AboutMeSection />
       {/* Other sections of your home page */}
     </HomeContainer>
   );
