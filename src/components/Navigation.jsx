@@ -118,7 +118,6 @@ const SocialLink = styled.a`
   }
 `;
 
-
 const Navigation = () => {
   const [activeLink, setActiveLink] = useState('/');
   const location = useLocation();

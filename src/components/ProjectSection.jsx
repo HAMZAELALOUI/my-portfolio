@@ -1,0 +1,317 @@
+import React, { useState, useEffect, useRef } from 'react';
+import styled, { keyframes, css } from 'styled-components';
+import { useInView } from 'react-intersection-observer';
+import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
+
+const ProjectSectionWrapper = styled.section`
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background-color: ${props => props.theme.colors.darkBackground};
+  color: ${props => props.theme.colors.lightText};
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 20px;
+`;
+
+const TerminalWindow = styled.div`
+  width: 60%;
+  max-width: 800px;
+  height: 80vh;
+  background-color: rgba(13, 12, 34, 0.25);
+  border-radius: 10px;
+  padding: 20px;
+  font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+  font-size: 1rem;
+  overflow-y: auto;
+  box-shadow: 0 0 30px rgba(135, 206, 250, 0.5);
+  border: 1px solid rgba(135, 206, 250, 0.3);
+  margin-right: 20px;
+`;
+
+const TerminalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: rgba(135, 206, 250, 0.1);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  margin: -20px -20px 20px -20px;
+`;
+
+const TerminalTitle = styled.span`
+  font-weight: bold;
+  color: #F0F6FC;
+`;
+
+const TerminalButtons = styled.div`
+  display: flex;
+  gap: 5px;
+`;
+
+const TerminalButton = styled.div`
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: ${props => props.color};
+`;
+
+const TerminalContent = styled.div`
+  height: calc(100% - 50px);
+  overflow-y: auto;
+`;
+
+const TerminalLine = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 10px;
+`;
+
+const CommandLine = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+`;
+
+const Prompt = styled.span`
+  color: #85E89D;
+  white-space: nowrap;
+  padding: 5px;
+`;
+
+const typing = keyframes`
+  from { width: 0 }
+  to { width: 100% }
+`;
+
+const Command = styled.span`
+  color: #B392F0;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: ${typing} 1s steps(30, end);
+`;
+
+const Output = styled.div`
+  color: #F0F6FC;
+  white-space: pre-wrap;
+  margin-top: 5px;
+  padding-left: 20px;
+`;
+
+const fadeIn = keyframes`
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
+const ProjectList = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+`;
+
+const ProjectItem = styled.div`
+  padding: 5px;
+  cursor: pointer;
+  animation: ${fadeIn} 0.5s ease-out forwards;
+  animation-delay: ${props => props.index * 0.1}s;
+  opacity: 0;
+  &:hover {
+    color: #4EC9B0;
+  }
+  ${props => props.active && `
+    color: #4EC9B0;
+    font-weight: bold;
+  `}
+`;
+
+const ProjectDetails = styled.div`
+  margin-top: 20px;
+  animation: ${fadeIn} 0.5s ease-out forwards;
+`;
+
+const ProjectTitle = styled.h3`
+  color: #CE9178;
+  margin-bottom: 10px;
+`;
+
+const ProjectDescription = styled.p`
+  margin-bottom: 10px;
+`;
+
+const ImageGallery = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  margin-top: 20px;
+`;
+
+const ProjectImage = styled.img`
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+`;
+
+const ImageNavButton = styled.button`
+  background: none;
+  border: none;
+  color: #4EC9B0;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0 10px;
+  &:hover {
+    color: #569CD6;
+  }
+`;
+
+const projects = [
+  {
+    id: 1,
+    name: 'Travel Reservation System',
+    description: 'A comprehensive platform for booking flights, hotels, and activities. Implemented advanced search, price comparison, and secure payment processing.',
+    technologies: 'Spring Boot, React, TypeScript, Flutter, Dart, Docker, Scrum, Tailwind, UML, MySQL',
+    images: [
+      'https://i.pinimg.com/564x/67/fa/bc/67fabcad5b7fb3a976bf89ecb1212d90.jpg',
+      'https://i.pinimg.com/564x/01/2b/0b/012b0bc2e871fc073c8dbf8008bdf20e.jpg',
+      'https://i.pinimg.com/564x/67/fa/bc/67fabcad5b7fb3a976bf89ecb1212d90.jpg',
+    ]
+  },
+  {
+    id: 2,
+    name: 'Smart Parking System',
+    description: 'An intelligent parking management solution with real-time availability. Integrated AI for demand prediction and computer vision for license plate recognition.',
+    technologies: 'React.js, Generative AI, Spring Boot',
+    images: [
+      'https://i.pinimg.com/564x/67/fa/bc/67fabcad5b7fb3a976bf89ecb1212d90.jpg',
+      'https://i.pinimg.com/564x/01/2b/0b/012b0bc2e871fc073c8dbf8008bdf20e.jpg',
+    ]
+  },
+  // Add more projects as needed
+];
+
+function ProjectSection() {
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [terminalOutput, setTerminalOutput] = useState([]);
+  const terminalRef = useRef(null);
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
+  const addLine = (prompt, command, output) => {
+    setTerminalOutput(prev => [...prev, { prompt, command, output }]);
+  };
+
+  const scrollToBottom = () => {
+    if (terminalRef.current) {
+      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    if (inView) {
+      const commands = [
+        { 
+          prompt: 'hamza@projects:~$', 
+          command: 'ls projects', 
+          output: (
+            <ProjectList>
+              {projects.map((project, index) => (
+                <ProjectItem 
+                  key={project.id}
+                  active={selectedProject && project.id === selectedProject.id}
+                  onClick={() => handleProjectClick(project)}
+                  index={index}
+                >
+                  {project.name}
+                </ProjectItem>
+              ))}
+            </ProjectList>
+          )
+        },
+      ];
+
+      const executeCommands = async () => {
+        for (const cmd of commands) {
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          addLine(cmd.prompt, cmd.command, cmd.output);
+          scrollToBottom();
+        }
+      };
+
+      executeCommands();
+    }
+  }, [inView]);
+
+  const handleProjectClick = (project) => {
+    setSelectedProject(null);
+    setCurrentImageIndex(0);
+    
+    // Clear previous project details
+    setTerminalOutput(prev => prev.filter(line => line.command !== 'cat project_details.txt'));
+
+    // Add new project details with animation delay
+    setTimeout(() => {
+      addLine('hamza@projects:~$', 'cat project_details.txt', (
+        <ProjectDetails>
+          <ProjectTitle>{project.name}</ProjectTitle>
+          <ProjectDescription>{project.description}</ProjectDescription>
+          <ProjectDescription><strong>Technologies:</strong> {project.technologies}</ProjectDescription>
+          <ImageGallery>
+            <ImageNavButton onClick={handlePrevImage}><FaChevronLeft /></ImageNavButton>
+            <ProjectImage src={project.images[currentImageIndex]} alt={`${project.name} screenshot`} />
+            <ImageNavButton onClick={handleNextImage}><FaChevronRight /></ImageNavButton>
+          </ImageGallery>
+        </ProjectDetails>
+      ));
+      scrollToBottom();
+      setSelectedProject(project);
+    }, 500);
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prevIndex) => 
+      (prevIndex + 1) % selectedProject.images.length
+    );
+  };
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prevIndex) => 
+      (prevIndex - 1 + selectedProject.images.length) % selectedProject.images.length
+    );
+  };
+
+  return (
+    <ProjectSectionWrapper ref={ref}>
+      <TerminalWindow>
+        <TerminalHeader>
+          <TerminalButtons>
+            <TerminalButton color="#FF5F56" />
+            <TerminalButton color="#FFBD2E" />
+            <TerminalButton color="#27C93F" />
+          </TerminalButtons>
+          <TerminalTitle>Projects - Git Bash</TerminalTitle>
+        </TerminalHeader>
+        <TerminalContent ref={terminalRef}>
+          {terminalOutput.map((line, index) => (
+            <TerminalLine key={index}>
+              <CommandLine>
+                <Prompt>{line.prompt}</Prompt>
+                <Command>{line.command}</Command>
+              </CommandLine>
+              {line.output && <Output>{line.output}</Output>}
+            </TerminalLine>
+          ))}
+        </TerminalContent>
+      </TerminalWindow>
+    </ProjectSectionWrapper>
+  );
+}
+
+export default ProjectSection;
