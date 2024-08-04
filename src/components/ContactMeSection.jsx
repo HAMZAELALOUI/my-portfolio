@@ -73,6 +73,7 @@ const CommandLine = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
+  position: relative;
 `;
 
 const Prompt = styled.span`
@@ -113,15 +114,64 @@ const ErrorMessage = styled.div`
   padding-left: 20px;
 `;
 
-const Input = styled.input`
-  background-color: transparent;
-  border: none;
-  color: #B392F0;
-  font-family: inherit;
-  font-size: inherit;
-  outline: none;
+const blinkAnimation = keyframes`
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+`;
+
+const InputWrapper = styled.div`
+  position: relative;
   width: 100%;
 `;
+
+const HiddenInput = styled.input`
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: text;
+`;
+
+const VisibleInput = styled.div`
+  color: #F0F6FC;
+  font-family: inherit;
+  font-size: inherit;
+  white-space: pre-wrap;
+  word-break: break-all;
+`;
+
+const Cursor = styled.span`
+  display: inline-block;
+  width: 8px;
+  height: 15px;
+  background-color: #F0F6FC;
+  animation: ${blinkAnimation} 0.7s infinite;
+  vertical-align: middle;
+`;
+
+function CustomInput({ value, onChange, onSubmit, inputRef }) {
+  return (
+    <InputWrapper>
+      <HiddenInput
+        ref={inputRef}
+        type="text"
+        value={value}
+        onChange={onChange}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            onSubmit(e);
+          }
+        }}
+      />
+      <VisibleInput>
+        {value}
+        <Cursor />
+      </VisibleInput>
+    </InputWrapper>
+  );
+}
 
 function ContactSection() {
   const [terminalOutput, setTerminalOutput] = useState([]);
@@ -129,6 +179,7 @@ function ContactSection() {
   const [currentField, setCurrentField] = useState('name');
   const [contactInfo, setContactInfo] = useState({ name: '', email: '', message: '' });
   const terminalRef = useRef(null);
+  const inputRef = useRef(null);
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -154,6 +205,12 @@ function ContactSection() {
   useEffect(() => {
     scrollToBottom();
   }, [terminalOutput]);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [currentField]);
 
   const handleInputChange = (e) => {
     setCurrentInput(e.target.value);
@@ -220,14 +277,12 @@ function ContactSection() {
             <TerminalLine>
               <CommandLine>
                 <Prompt>hamza@contact:~$</Prompt>
-                <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-                  <Input
-                    type="text"
-                    value={currentInput}
-                    onChange={handleInputChange}
-                    autoFocus
-                  />
-                </form>
+                <CustomInput
+                  value={currentInput}
+                  onChange={handleInputChange}
+                  onSubmit={handleSubmit}
+                  inputRef={inputRef}
+                />
               </CommandLine>
             </TerminalLine>
           )}
