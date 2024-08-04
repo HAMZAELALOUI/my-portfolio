@@ -176,7 +176,7 @@ function CustomInput({ value, onChange, onSubmit, inputRef }) {
 function ContactSection() {
   const [terminalOutput, setTerminalOutput] = useState([]);
   const [currentInput, setCurrentInput] = useState('');
-  const [currentField, setCurrentField] = useState('name');
+  const [currentField, setCurrentField] = useState('command');
   const [contactInfo, setContactInfo] = useState({ name: '', email: '', message: '' });
   const terminalRef = useRef(null);
   const inputRef = useRef(null);
@@ -197,8 +197,8 @@ function ContactSection() {
 
   useEffect(() => {
     if (inView) {
-      addLine('hamza@contact:~$', './contact_form.sh', 'Welcome to the contact form. Please enter your information:');
-      addLine('hamza@contact:~$', 'Enter your name:', null);
+      addLine('hamza@contact:~$', '', 'Welcome to the contact terminal. Available commands:');
+      addLine('', '', 'contact - Start a new contact form\nclear - Clear the terminal\nexit - Exit the terminal');
     }
   }, [inView]);
 
@@ -219,7 +219,9 @@ function ContactSection() {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    if (currentField === 'name') {
+    if (currentField === 'command') {
+      handleCommand(currentInput);
+    } else if (currentField === 'name') {
       if (currentInput.trim() === '') {
         addLine('hamza@contact:~$', currentInput, <ErrorMessage>Error: Name cannot be empty. Please enter your name:</ErrorMessage>);
       } else {
@@ -245,11 +247,36 @@ function ContactSection() {
         setContactInfo(prev => ({ ...prev, message: currentInput }));
         addLine('hamza@contact:~$', currentInput, null);
         addLine('hamza@contact:~$', 'send_message', <SuccessMessage>Message sent successfully! Thank you for contacting us.</SuccessMessage>);
-        setCurrentField('done');
+        setCurrentField('command');
+        addLine('hamza@contact:~$', '', 'Available commands:');
+        addLine('', '', 'contact - Start a new contact form\nclear - Clear the terminal\nexit - Exit the terminal');
       }
     }
     
     setCurrentInput('');
+  };
+
+  const handleCommand = (command) => {
+    addLine('hamza@contact:~$', command, null);
+    
+    switch (command.toLowerCase()) {
+      case 'contact':
+        addLine('', '', 'Starting new contact form. Please enter your name:');
+        setCurrentField('name');
+        break;
+      case 'clear':
+        setTerminalOutput([]);
+        addLine('hamza@contact:~$', '', 'Available commands:');
+        addLine('', '', 'contact - Start a new contact form\nclear - Clear the terminal\nexit - Exit the terminal');
+        break;
+      case 'exit':
+        addLine('', '', 'Thank you for using the contact terminal. Goodbye!');
+        setCurrentField('done');
+        break;
+      default:
+        addLine('', '', `Command not recognized: ${command}. Available commands:`);
+        addLine('', '', 'contact - Start a new contact form\nclear - Clear the terminal\nexit - Exit the terminal');
+    }
   };
 
   return (
@@ -261,7 +288,7 @@ function ContactSection() {
             <TerminalButton color="#FFBD2E" />
             <TerminalButton color="#27C93F" />
           </TerminalButtons>
-          <TerminalTitle>Contact - Git Bash</TerminalTitle>
+          <TerminalTitle>Contact - Terminal</TerminalTitle>
         </TerminalHeader>
         <TerminalContent ref={terminalRef}>
           {terminalOutput.map((line, index) => (
