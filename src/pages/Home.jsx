@@ -10,6 +10,10 @@ const HomeContainer = styled.div`
   position: relative;
 `;
 
+const SectionWrapper = styled.div`
+  scroll-margin-top: 80px; // Adjust this value based on your header height
+`;
+
 const Home = () => {
   const theme = useTheme();
   const homeRef = useRef(null);

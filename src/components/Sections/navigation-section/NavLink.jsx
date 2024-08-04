@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-import { HashLink } from 'react-router-hash-link';
 
-const NavLink = styled(HashLink)`
+const NavLink = styled.button`
   display: flex;
   align-items: center;
   color: #8EBBFF;
@@ -10,6 +9,22 @@ const NavLink = styled(HashLink)`
   transition: all 0.3s ease;
   position: relative;
   text-shadow: 0 0 5px rgba(142, 187, 255, 0.5);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  text-align: left;
+  
+  // Remove outline for all states
+  outline: none;
+  &::-moz-focus-inner {
+    border: 0;
+  }
+
+  &:focus {
+    outline: none;
+  }
 
   &:hover, &.active {
     color: #4DFFF3;

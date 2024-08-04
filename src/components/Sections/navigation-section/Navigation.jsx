@@ -1,5 +1,4 @@
 import React from 'react';
-import { HashLink } from 'react-router-hash-link';
 import NavContainer from './NavContainer';
 import NavTerminal from './NavTerminal';
 import NamePrompt from './NamePrompt';
@@ -18,10 +17,11 @@ const Navigation = () => {
   const isProjectsActive = useIntersectionObserver('projects', { threshold: 0.5 });
   const isContactActive = useIntersectionObserver('contact', { threshold: 0.5 });
 
-  const scrollWithOffset = (el) => {
-    const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
-    const yOffset = -80; // Adjust this value based on your fixed header height
-    window.scrollTo({ top: yCoordinate + yOffset, behavior: 'smooth' });
+  const scrollToSection = (sectionId) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   return (
@@ -29,19 +29,19 @@ const Navigation = () => {
       <NavTerminal>
         <NamePrompt>user@hamza-elaloui:~$</NamePrompt>
         <NavPrompt>hamza-elaloui:~/navigation$</NavPrompt>
-        <NavLink as={HashLink} smooth to="#home" scroll={scrollWithOffset} className={isHomeActive ? 'active' : ''}>
+        <NavLink onClick={() => scrollToSection('home')} className={isHomeActive ? 'active' : ''}>
           cd home
           <Cursor visible={isHomeActive} />
         </NavLink>
-        <NavLink as={HashLink} smooth to="#about" scroll={scrollWithOffset} className={isAboutActive ? 'active' : ''}>
+        <NavLink onClick={() => scrollToSection('about')} className={isAboutActive ? 'active' : ''}>
           cat about.md
           <Cursor visible={isAboutActive} />
         </NavLink>
-        <NavLink as={HashLink} smooth to="#projects" scroll={scrollWithOffset} className={isProjectsActive ? 'active' : ''}>
+        <NavLink onClick={() => scrollToSection('projects')} className={isProjectsActive ? 'active' : ''}>
           ls projects/
           <Cursor visible={isProjectsActive} />
         </NavLink>
-        <NavLink as={HashLink} smooth to="#contact" scroll={scrollWithOffset} className={isContactActive ? 'active' : ''}>
+        <NavLink onClick={() => scrollToSection('contact')} className={isContactActive ? 'active' : ''}>
           ping contact
           <Cursor visible={isContactActive} />
         </NavLink>
