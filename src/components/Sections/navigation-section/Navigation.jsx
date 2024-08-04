@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React from 'react';
+import { HashLink } from 'react-router-hash-link';
 import NavContainer from './NavContainer';
 import NavTerminal from './NavTerminal';
 import NamePrompt from './NamePrompt';
@@ -10,33 +10,41 @@ import SocialLink from './SocialLink';
 import Cursor from './Cursor';
 import { FaGithub, FaLinkedin, FaUpload } from 'react-icons/fa';
 import { SiGmail } from 'react-icons/si';
+import useIntersectionObserver from '../../../hooks/useIntersectionObserver';
 
 const Navigation = () => {
-  const [activeLink, setActiveLink] = useState('/');
-  const location = useLocation();
+  const isHomeActive = useIntersectionObserver('home', { threshold: 0.5 });
+  const isAboutActive = useIntersectionObserver('about', { threshold: 0.5 });
+  const isProjectsActive = useIntersectionObserver('projects', { threshold: 0.5 });
+  const isContactActive = useIntersectionObserver('contact', { threshold: 0.5 });
 
-  useEffect(() => {
-    setActiveLink(location.pathname);
-  }, [location]);
+  const scrollWithOffset = (el) => {
+    const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
+    const yOffset = -80; // Adjust this value based on your fixed header height
+    window.scrollTo({ top: yCoordinate + yOffset, behavior: 'smooth' });
+  };
 
   return (
     <NavContainer>
       <NavTerminal>
         <NamePrompt>user@hamza-elaloui:~$</NamePrompt>
         <NavPrompt>hamza-elaloui:~/navigation$</NavPrompt>
-        <NavLink to="/" className={activeLink === '/' ? 'active' : ''}>
+        <NavLink as={HashLink} smooth to="#home" scroll={scrollWithOffset} className={isHomeActive ? 'active' : ''}>
           cd home
+          <Cursor visible={isHomeActive} />
         </NavLink>
-        <NavLink to="/about" className={activeLink === '/about' ? 'active' : ''}>
+        <NavLink as={HashLink} smooth to="#about" scroll={scrollWithOffset} className={isAboutActive ? 'active' : ''}>
           cat about.md
+          <Cursor visible={isAboutActive} />
         </NavLink>
-        <NavLink to="/projects" className={activeLink === '/projects' ? 'active' : ''}>
+        <NavLink as={HashLink} smooth to="#projects" scroll={scrollWithOffset} className={isProjectsActive ? 'active' : ''}>
           ls projects/
+          <Cursor visible={isProjectsActive} />
         </NavLink>
-        <NavLink to="/contact" className={activeLink === '/contact' ? 'active' : ''}>
+        <NavLink as={HashLink} smooth to="#contact" scroll={scrollWithOffset} className={isContactActive ? 'active' : ''}>
           ping contact
+          <Cursor visible={isContactActive} />
         </NavLink>
-        <Cursor />
         <SocialLinks>
           <SocialLink href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer">
             <FaGithub />

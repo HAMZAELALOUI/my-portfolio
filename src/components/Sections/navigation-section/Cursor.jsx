@@ -1,4 +1,4 @@
-import styled ,{keyframes} from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 const cursorBlink = keyframes`
   0%, 100% { opacity: 1; }
@@ -6,7 +6,7 @@ const cursorBlink = keyframes`
 `;
 
 const Cursor = styled.span`
-  display: inline-block;
+  display: ${props => props.visible ? 'inline-block' : 'none'};
   width: 8px;
   height: 15px;
   background-color: #4DFFF3;

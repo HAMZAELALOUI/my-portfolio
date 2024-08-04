@@ -1,8 +1,9 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
 
-const NavLink = styled(Link)`
-  display: block;
+const NavLink = styled(HashLink)`
+  display: flex;
+  align-items: center;
   color: #8EBBFF;
   text-decoration: none;
   padding: 5px 0;
@@ -18,18 +19,6 @@ const NavLink = styled(Link)`
   &::before {
     content: '$ ';
     color: #90EE90;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background-color: #4DFFF3;
-    transition: width 0.3s ease;
-    box-shadow: 0 0 5px rgba(77, 255, 243, 0.5);
   }
 
   &:hover::after, &.active::after {
