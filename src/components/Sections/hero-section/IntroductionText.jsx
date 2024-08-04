@@ -1,6 +1,6 @@
 // IntroductionText.js
 import React from 'react';
-import { IntroductionTextStyled } from './StyledComponents';
+import { IntroductionTextStyled } from '../../../styles/HeroSection.styles';
 
 const IntroductionText = () => (
   <IntroductionTextStyled>

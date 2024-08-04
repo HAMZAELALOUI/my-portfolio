@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { projects } from '../data/projectsData';
-import { useProjectTerminal } from '../hooks/useProjectTerminal';
-import TerminalWindow from './common/TerminalWindow';
-import ProjectList from './common/ProjectList';
-import ProjectDetails from './common/ProjectDetails';
-import ImageModal from './common/ImageModal';
-import { ProjectSectionWrapper } from '../styles/ProjectSection.styles';
+import { projects } from '../../../data/projectsData';
+import { useProjectTerminal } from '../../../hooks/useProjectTerminal';
+import TerminalWindow from '../../common/TerminalWindow';
+import ProjectList from '../../common/ProjectList';
+import ProjectDetails from '../../common/ProjectDetails';
+import ImageModal from '../../common/ImageModal';
+import { ProjectSectionWrapper } from '../../../styles/ProjectSection.styles';
 import { FaChevronLeft, FaChevronRight, FaTimes, FaFolder, FaFolderOpen } from 'react-icons/fa';
 import styled, { keyframes } from 'styled-components';
 

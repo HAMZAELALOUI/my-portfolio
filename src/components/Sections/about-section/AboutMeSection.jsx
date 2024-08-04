@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { skillsData, interestsData, certificationsData } from '../data/aboutMeData';
-import { TerminalWindow, TerminalContent } from './common/Terminal';
-import { SkillsGrid, SkillItem, SkillIcon } from './common/SkillDisplay';
-import { useTerminal } from '../hooks/useTerminal';
+import { skillsData, interestsData, certificationsData } from '../../../data/aboutMeData';
+import { TerminalWindow, TerminalContent } from '../../common/Terminal';
+import { SkillsGrid, SkillItem, SkillIcon } from '../../../styles/SkillDisplay.styles';
+import { useTerminal } from '../../../hooks/useTerminal';
 import {
   AboutMeSectionWrapper,
   TerminalLine,
@@ -11,7 +11,7 @@ import {
   Prompt,
   Command,
   Output
-} from '../styles/AboutMeSection.styles';
+} from '../../../styles/AboutMeSection.styles';
 
 const AboutMeSection = () => {
   const { terminalOutput, terminalRef, addLine, scrollToBottom } = useTerminal();

@@ -2,8 +2,8 @@
 import React from 'react';
 import { Stars, Html } from '@react-three/drei';
 import ProgrammingGalaxy from './ProgrammingGalaxy';
-import SpaceVehicle from './SpaceVehicle';
-import IntroductionText from './IntroductionText';
+import SpaceVehicle from '../Sections/hero-section/SpaceVehicle';
+import IntroductionText from '../Sections/hero-section/IntroductionText';
 
 const EnhancedProgrammingGalaxy = ({ color, theme }) => {
   const astronautPosition = [-20, 8, -10];

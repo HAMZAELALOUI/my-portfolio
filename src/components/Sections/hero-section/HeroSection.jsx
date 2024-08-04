@@ -3,9 +3,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import styled from 'styled-components';
 import * as THREE from 'three';
-import { HeroSectionWrapper, MouseIconContainer } from './StyledComponents';
-import ViewWorkButton from './ViewWorkButton';
-import EnhancedProgrammingGalaxy from './EnhancedProgrammingGalaxy';
+import { HeroSectionWrapper, MouseIconContainer } from '../../../styles/HeroSection.styles';
+import ViewWorkButton from '../../buttons/ViewWorkButton';
+import EnhancedProgrammingGalaxy from '../../common/EnhancedProgrammingGalaxy';
 
 const CanvasContainer = styled.div`
   position: absolute;

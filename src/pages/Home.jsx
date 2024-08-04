@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled, { useTheme } from 'styled-components';
-import HeroSection from '../components/HeroSection';
-import AboutMeSection from '../components/AboutMeSection';
-import GlobalBackground from '../components/GlobalBackground';
-import ProjectSection from '../components/ProjectSection'
-import ContactMeSection from '../components/ContactMeSection';
+import HeroSection from '../components/Sections/hero-section/HeroSection';
+import AboutMeSection from '../components/Sections/about-section/AboutMeSection';
+import GlobalBackground from '../components/common/GlobalBackground';
+import ProjectSection from '../components/Sections/projects-section/ProjectSection'
+import ContactMeSection from '../components/Sections/contact-section/ContactMeSection';
 
 const HomeContainer = styled.div`
   position: relative;
