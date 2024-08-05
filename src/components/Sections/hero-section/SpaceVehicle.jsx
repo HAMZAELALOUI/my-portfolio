@@ -12,7 +12,7 @@ const SpaceVehicle = ({ scale = 3, position = [-20, 8, -10] }) => {
   useEffect(() => {
     const loader = new GLTFLoader();
     loader.load(
-      '/src/assets/space_vehicle.glb',
+      '/assets/space_vehicle.glb',
       (gltf) => {
         gltf.scene.traverse((child) => {
           if (child.isMesh) {

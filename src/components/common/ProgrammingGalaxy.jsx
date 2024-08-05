@@ -8,7 +8,7 @@ import { SiTypescript, SiVuedotjs, SiAngular, SiGraphql, SiMongodb, SiPostgresql
 
 const RetroComputer = () => {
   const computerRef = useRef();
-  const gltf = useLoader(GLTFLoader, '/src/assets/triangular_animated_portal.glb');
+  const gltf = useLoader(GLTFLoader, '/assets/triangular_animated_portal.glb');
 
   useFrame(() => {
     computerRef.current.rotation.y += 0.005;
