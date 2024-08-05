@@ -45,36 +45,42 @@ function ProjectSection() {
     }
   }, [inView]);
 
+  useEffect(() => {
+    if (selectedProject) {
+      setTerminalOutput(prev => {
+        const newOutput = prev.filter(line => line.command !== 'cat project_details.txt');
+        newOutput.push({
+          prompt: 'hamza@projects:~$',
+          command: 'cat project_details.txt',
+          output: (
+            <FadeInDiv>
+              <ProjectDetails
+                project={selectedProject}
+                currentImageIndex={currentImageIndex}
+                showAllThumbnails={showAllThumbnails}
+                onImageChange={handleImageChange}
+                onThumbnailClick={handleThumbnailClick}
+                onShowMoreClick={() => setShowAllThumbnails(true)}
+                onImageClick={handleImageClick}
+              />
+            </FadeInDiv>
+          )
+        });
+        return newOutput;
+      });
+    }
+  }, [currentImageIndex, selectedProject, showAllThumbnails]);
+
   const handleProjectClick = (project) => {
     setSelectedProject(project);
     setCurrentImageIndex(0);
     setShowAllThumbnails(false);
-    
-    // Remove previous project details if exist
-    setTerminalOutput(prev => prev.filter(line => line.command !== 'cat project_details.txt'));
-
-    // Add new project details with fade-in effect
-    addLine('hamza@projects:~$', 'cat project_details.txt', (
-      <FadeInDiv>
-        <ProjectDetails
-          project={project}
-          currentImageIndex={currentImageIndex}
-          showAllThumbnails={showAllThumbnails}
-          onImageChange={handleImageChange}
-          onThumbnailClick={setCurrentImageIndex}
-          onShowMoreClick={() => setShowAllThumbnails(true)}
-          onImageClick={handleImageClick}
-        />
-      </FadeInDiv>
-    ));
-    
-    // Scroll to the top of the terminal window
     scrollToTop(terminalRef);
   };
 
   const scrollToTop = (ref) => {
     if (ref.current) {
-      ref.current.scrollTop = 0; // Scroll to the top
+      ref.current.scrollTop = 0;
     }
   };
 
@@ -88,6 +94,10 @@ function ProjectSection() {
       }
       return prevIndex;
     });
+  };
+
+  const handleThumbnailClick = (index) => {
+    setCurrentImageIndex(index);
   };
 
   const handleImageClick = () => {
