@@ -39,6 +39,11 @@ const NavLink = styled.button`
   &:hover::after, &.active::after {
     width: 100%;
   }
+
+  ${props => props.isMobile && `
+    padding: 10px 0;
+    font-size: 1.1em;
+  `}
 `;
 
 export default NavLink;

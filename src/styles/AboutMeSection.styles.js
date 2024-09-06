@@ -11,6 +11,11 @@ export const AboutMeSectionWrapper = styled.section`
   justify-content: flex-end;
   align-items: center;
   padding: 20px;
+
+  @media (max-width: 768px) {
+    justify-content: center;
+    padding: 10px;
+  }
 `;
 
 export const TerminalLine = styled.div`
@@ -18,18 +23,31 @@ export const TerminalLine = styled.div`
   flex-direction: column;
   align-items: flex-start;
   margin-bottom: 10px;
+
+  @media (max-width: 768px) {
+    margin-bottom: 8px;
+  }
 `;
 
 export const CommandLine = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+  }
 `;
 
 export const Prompt = styled.span`
   color: #85E89D;
   white-space: nowrap;
   padding: 5px;
+
+  @media (max-width: 768px) {
+    font-size: 0.9em;
+    padding: 3px;
+  }
 `;
 
 const typing = keyframes`
@@ -43,6 +61,11 @@ export const Command = styled.span`
   overflow: hidden;
   white-space: nowrap;
   animation: ${typing} 1s steps(30, end);
+
+  @media (max-width: 768px) {
+    font-size: 0.9em;
+    max-width: 100%;
+  }
 `;
 
 export const Output = styled.div`
@@ -50,4 +73,10 @@ export const Output = styled.div`
   white-space: pre-wrap;
   margin-top: 5px;
   padding-left: 20px;
+
+  @media (max-width: 768px) {
+    font-size: 0.9em;
+    padding-left: 10px;
+    margin-top: 3px;
+  }
 `;

@@ -19,6 +19,18 @@ const NavTerminal = styled.div`
     background-color: rgba(13, 12, 34, 0.25);
     box-shadow: 0 0 15px rgba(77, 255, 243, 0.3), 0 0 40px rgba(77, 255, 243, 0.2);
   }
+
+  ${props => props.isMobile && `
+    display: ${props.isOpen ? 'block' : 'none'};
+    max-width: 100%;
+    border-radius: 0;
+    padding: 15px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: rgba(13, 12, 34, 0.9);
+  `}
 `;
 
 export default NavTerminal;

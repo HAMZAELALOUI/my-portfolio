@@ -11,6 +11,10 @@ export const ProjectList = styled.div`
   grid-template-rows: repeat(2, auto);
   gap: 15px;
   padding: 10px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const ProjectItem = styled.div`
@@ -33,13 +37,29 @@ export const ProjectItem = styled.div`
     background-color: rgba(78, 201, 176, 0.2);
     box-shadow: 0 0 10px rgba(78, 201, 176, 0.3);
   `}
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+  }
 `;
 
 export const ProjectIcon = styled.span`
   margin-right: 10px;
   color: #4EC9B0;
+
+  @media (max-width: 480px) {
+    margin-right: 0;
+    margin-bottom: 5px;
+  }
 `;
 
 export const ProjectName = styled.span`
   flex-grow: 1;
+
+  @media (max-width: 480px) {
+    width: 100%;
+    text-align: center;
+  }
 `;

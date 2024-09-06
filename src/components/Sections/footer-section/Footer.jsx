@@ -16,23 +16,37 @@ const FooterContent = styled.div`
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
+  padding: 0 20px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const Section = styled.div`
   flex: 1;
-  min-width: 300px;
+  min-width: 250px;
   margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
   align-items: ${props => props.align || 'flex-start'};
+
+  @media (max-width: 768px) {
+    align-items: center;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
 `;
 
 const SocialLinks = styled.div`
   display: flex;
   gap: 1rem;
   margin-top: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
 `;
 
 const SocialLink = styled.a`
@@ -62,6 +76,10 @@ const ContactItem = styled.p`
 
   svg {
     margin-right: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    justify-content: center;
   }
 `;
 
@@ -112,7 +130,7 @@ const Footer = () => {
       </FooterContent>
       <Divider />
       <FooterContent>
-        <p style={{ width: '100%', textAlign: 'center' }}>
+        <p style={{ width: '100%', textAlign: 'center', padding: '0 10px' }}>
           <span style={{ color: '#85E89D' }}>hamza@portfolio:~$</span> Thank you for visiting!
         </p>
       </FooterContent>

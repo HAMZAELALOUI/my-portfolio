@@ -8,20 +8,22 @@ const GlobalStyles = createGlobalStyle`
     padding: 0;
   }
 
-  html, body {
+  html, body, #root {
     height: 100%;
+    width: 100%;
+    overflow-x: hidden;
   }
 
   body {
     font-family: 'Arial', sans-serif;
-    background: transparent; // Ensure the body background is transparent
+    background: transparent;
     color: ${({ theme }) => theme.colors.text};
     line-height: 1.5;
+    font-size: 16px;
   }
 
   #root {
-    height: 100%;
-    overflow-x: hidden;
+    position: relative;
   }
 
   a {
@@ -31,6 +33,19 @@ const GlobalStyles = createGlobalStyle`
 
   button {
     cursor: pointer;
+    font-family: inherit;
+  }
+
+  @media (max-width: 768px) {
+    body {
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    body {
+      font-size: 12px;
+    }
   }
 `;
 

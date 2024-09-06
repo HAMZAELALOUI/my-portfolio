@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import NavContainer from './NavContainer';
 import NavTerminal from './NavTerminal';
 import NamePrompt from './NamePrompt';
@@ -7,7 +7,7 @@ import NavLink from './NavLink';
 import SocialLinks from './SocialLinks';
 import SocialLink from './SocialLink';
 import Cursor from './Cursor';
-import { FaGithub, FaLinkedin, FaUpload } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaUpload, FaBars, FaTimes } from 'react-icons/fa';
 import { SiGmail } from 'react-icons/si';
 import useIntersectionObserver from '../../../hooks/useIntersectionObserver';
 
@@ -17,16 +17,45 @@ const Navigation = () => {
   const isProjectsActive = useIntersectionObserver('projects', { threshold: 0.5 });
   const isContactActive = useIntersectionObserver('contact', { threshold: 0.5 });
 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const scrollToSection = (sectionId) => {
     const section = document.getElementById(sectionId);
     if (section) {
       section.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+    if (isMobile) {
+      setIsMobileMenuOpen(false);
+    }
   };
 
+  const MobileMenuToggle = ({ isOpen, onClick }) => (
+    <button onClick={onClick} className="mobile-menu-toggle">
+      {isOpen ? <FaTimes /> : <FaBars />}
+    </button>
+  );
+
   return (
-    <NavContainer>
-      <NavTerminal>
+    <NavContainer isMobile={isMobile}>
+      {isMobile && (
+        <MobileMenuToggle
+          isOpen={isMobileMenuOpen}
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        />
+      )}
+      <NavTerminal isMobile={isMobile} isOpen={!isMobile || isMobileMenuOpen}>
         <NamePrompt>user@hamza-elaloui:~$</NamePrompt>
         <NavPrompt>hamza-elaloui:~/navigation$</NavPrompt>
         <NavLink onClick={() => scrollToSection('home')} className={isHomeActive ? 'active' : ''}>
